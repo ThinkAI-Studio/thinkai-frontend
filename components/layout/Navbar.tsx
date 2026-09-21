@@ -69,14 +69,24 @@ export default function Navbar() {
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoText}>ThinkAI</span>
+          <Image
+            src="/logo.png"
+            alt="ThinkAI Logo"
+            width={28}
+            height={28}
+            className={styles.brandLogo}
+            priority
+          />
+          <span className={styles.logoText}>
+            ThinkAI<span className={styles.brandSup}>®</span>
+          </span>
         </Link>
 
         {/* Navigation Links */}
         <ul className={styles.navLinks}>
           <li><Link href="/courses">Khóa học</Link></li>
           <li><Link href="/exams">Luyện thi</Link></li>
-          <li><Link href="/ai-tutor">BiliBily</Link></li>
+          <li><Link href="/ai-tutor">AI Tutor</Link></li>
           <li><Link href="/payment">Bảng giá</Link></li>
         </ul>
 

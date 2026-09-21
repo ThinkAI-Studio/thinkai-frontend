@@ -364,7 +364,7 @@ export default function AiTutorFloatingLauncher() {
         setMessages(prev => [...prev, {
           id: `action-confirmed-${Date.now()}`,
           role: 'assistant',
-          content: `✅ ${result.message}`
+          content: `[Đã xác nhận] ${result.message}`
         }]);
       } else {
         setError(result.message);
@@ -403,7 +403,7 @@ export default function AiTutorFloatingLauncher() {
       setMessages(prev => [...prev, {
         id: `action-cancelled-${Date.now()}`,
         role: 'assistant',
-        content: '❌ Thao tác đã bị hủy.'
+        content: '[Đã hủy] Thao tác đã được hủy.'
       }]);
       setPendingAction(null);
     } catch (err: any) {
@@ -496,7 +496,7 @@ export default function AiTutorFloatingLauncher() {
                         onClick={() => setShowThinkingSteps(prev => ({ ...prev, [message.id]: !prev[message.id] }))}
                       >
                         {isStreaming ? (
-                          <span className={styles.streamingIndicator}>⚡ Đang xử lý...</span>
+                          <span className={styles.streamingIndicator}>Đang phân tích...</span>
                         ) : (
                           showThinkingSteps[message.id] ? '▲ Ẩn quá trình xử lý' : '▼ Xem quá trình xử lý'
                         )}
@@ -531,7 +531,7 @@ export default function AiTutorFloatingLauncher() {
             {pendingAction && (
               <div className={styles.pendingActionBox}>
                 <p>
-                  <strong>⚠️ Xác nhận thao tác</strong>
+                  <strong>Xác nhận thao tác</strong>
                   <br />
                   Bạn có muốn thực hiện "{pendingAction.action}" không?
                 </p>
@@ -542,7 +542,7 @@ export default function AiTutorFloatingLauncher() {
                     onClick={handleConfirmAction}
                     disabled={processingAction}
                   >
-                    ✅ Xác nhận
+                    Xác nhận
                   </button>
                   <button 
                     type="button" 
@@ -550,7 +550,7 @@ export default function AiTutorFloatingLauncher() {
                     onClick={handleCancelAction}
                     disabled={processingAction}
                   >
-                    ❌ Hủy
+                    Hủy bỏ
                   </button>
                 </div>
               </div>
@@ -559,13 +559,13 @@ export default function AiTutorFloatingLauncher() {
             {missingField && (
               <div className={styles.pendingActionBox}>
                 <p>
-                  <strong>📝 Cần thêm thông tin</strong>
+                  <strong>Yêu cầu bổ sung thông tin</strong>
                   <br />
                   {fieldInputValue || 'Nhập thông tin bên dưới:'}
                 </p>
                 <div className={styles.pendingActionButtons}>
                   <input
-                    style={{flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccc'}}
+                    style={{ flex: 1, padding: '8px 14px', borderRadius: '9999px', border: '1px solid rgba(255, 255, 255, 0.2)', background: 'rgba(8, 26, 48, 0.85)', color: '#ffffff', outline: 'none', fontSize: '13px' }}
                     value={fieldInputValue}
                     onChange={(e) => setFieldInputValue(e.target.value)}
                     placeholder={`Nhập ${missingField}...`}

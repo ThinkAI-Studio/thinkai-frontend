@@ -159,7 +159,10 @@ export default function ExamTakingPage() {
       <div className={styles.examArea}>
         <header className={styles.header}>
           <Link href="/" className={styles.logo}>
-            <span className={styles.logoText}>ThinkAI</span>
+            <img src="/logo.png" alt="ThinkAI Logo" className={styles.brandLogo} />
+            <span className={styles.logoText}>
+              ThinkAI<span className={styles.brandSup}>®</span>
+            </span>
           </Link>
 
           <div className={styles.timer}>

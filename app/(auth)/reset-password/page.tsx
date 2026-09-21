@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import styles from './page.module.css';
-import Button from '@/components/ui/Button';
+import Image from 'next/image';
+import styles from '../login/page.module.css';
 import { resetPassword } from '@/services/auth';
 import { ApiException } from '@/services/api';
 
@@ -22,40 +22,6 @@ export default function ResetPasswordPage() {
   const [globalError, setGlobalError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // No token → invalid link
-  if (!token) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.formSide}>
-          <div className={styles.formContent}>
-            <Link href="/" className={styles.logo}>
-              <span className={styles.logoText}>ThinkAI</span>
-            </Link>
-            <div className={styles.errorState}>
-              <h2>Link không hợp lệ</h2>
-              <p>Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.</p>
-              <Link href="/forgot-password">
-                <Button variant="primary" size="lg">Yêu cầu link mới →</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className={styles.imageSide}>
-          <div className={styles.imageContent}>
-            <div className={styles.assistantBadge}>
-              ThinkAI Assistant
-            </div>
-            <div className={styles.quote}>
-              <div className={styles.quoteLine}></div>
-              <p className={styles.quoteText}>&quot;Kiên trì là chìa<br/>khóa thành công.&quot;</p>
-              <p className={styles.quoteSubtext}>HỌC TẬP KHÔNG GIỚI HẠN</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -75,7 +41,6 @@ export default function ResetPasswordPage() {
     try {
       const result = await resetPassword(token, formData.newPassword, formData.confirmPassword);
       setSuccess(result.message);
-      // Redirect to login after 3 seconds
       setTimeout(() => router.push('/login'), 3000);
     } catch (err) {
       if (err instanceof ApiException) {
@@ -93,97 +58,128 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Left Side - Form */}
-      <div className={styles.formSide}>
-        <div className={styles.formContent}>
-          {/* Logo */}
-          <Link href="/" className={styles.logo}>
-            <span className={styles.logoText}>ThinkAI</span>
+    <div className={styles.stage}>
+
+      {/* 1. Header */}
+      <header className={styles.header}>
+        <nav className={styles.nav}>
+          <Link href="/" className={styles.logo} aria-label="ThinkAI Home">
+            <Image
+              src="/logo.png"
+              alt="ThinkAI Logo"
+              width={32}
+              height={32}
+              className={styles.logoImg}
+              priority
+            />
+            <span className={styles.logoText}>
+              <span>ThinkAI</span>
+              <sup className={styles.logoSup}>®</sup>
+            </span>
           </Link>
 
-          {/* Header */}
-          <div className={styles.welcome}>
-            <h1>
-              <em>Đặt lại</em> <span className={styles.highlight}>mật khẩu</span>
-            </h1>
-            <p>Nhập mật khẩu mới cho tài khoản của bạn.</p>
+          <div className={styles.navLinks}>
+            <Link href="/" className={styles.navLink}>Home</Link>
+            <Link href="/courses" className={styles.navLink}>Courses</Link>
+            <Link href="/exams" className={styles.navLink}>Exams</Link>
+            <Link href="/ai-tutor" className={styles.navLink}>AI Tutor</Link>
+            <Link href="/payment" className={styles.navLink}>Pricing</Link>
           </div>
 
-          {/* Success */}
-          {success && (
-            <div className={styles.successAlert}>
-              {success}
-              <p className={styles.redirectHint}>Đang chuyển về trang đăng nhập...</p>
+          <Link href="/login" className={`${styles.navCta} ${styles.liquidGlass}`}>
+            Đăng nhập
+          </Link>
+        </nav>
+      </header>
+
+      {/* 2. Center Console */}
+      <main className={styles.hero}>
+        <div className={styles.trustPill}>
+          <span>SECURITY CREDENTIAL UPDATE</span>
+        </div>
+
+        <h1 className={styles.headline}>New Password</h1>
+
+        <p className={styles.subhead}>
+          Nhập mật khẩu mới an toàn cho tài khoản ThinkAI của bạn.
+        </p>
+
+        <div className={`${styles.authCard} ${styles.liquidGlass}`}>
+          {!token ? (
+            <div style={{ textAlign: 'center' }}>
+              <div className={styles.errorAlert}>
+                Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.
+              </div>
+              <Link href="/forgot-password" className={styles.submitBtn} style={{ textDecoration: 'none', marginTop: 16 }}>
+                Yêu cầu link mới →
+              </Link>
             </div>
+          ) : (
+            <>
+              {globalError && <div className={styles.errorAlert}>{globalError}</div>}
+              {success ? (
+                <div style={{ textAlign: 'center' }}>
+                  <div className={styles.successAlert}>
+                    {success}
+                    <p style={{ marginTop: 6, fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
+                      Đang chuyển hướng về trang đăng nhập...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <form className={styles.form} onSubmit={handleSubmit}>
+                  <div className={styles.pillInputWrap}>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      placeholder="Mật khẩu mới (tối thiểu 8 ký tự)..."
+                      className={`${styles.pillInput} ${errors.newPassword ? styles.pillInputError : ''}`}
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.newPassword && <span className={styles.fieldError}>{errors.newPassword}</span>}
+                  </div>
+
+                  <div className={styles.pillInputWrap}>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      placeholder="Nhập lại mật khẩu mới..."
+                      className={`${styles.pillInput} ${errors.confirmPassword ? styles.pillInputError : ''}`}
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.confirmPassword && <span className={styles.fieldError}>{errors.confirmPassword}</span>}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={styles.submitBtn}
+                    disabled={loading}
+                  >
+                    {loading ? 'Đang xử lý...' : 'Đặt lại mật khẩu →'}
+                  </button>
+                </form>
+              )}
+            </>
           )}
 
-          {/* Error */}
-          {globalError && (
-            <div className={styles.errorAlert}>{globalError}</div>
-          )}
-
-          {/* Form */}
-          {!success && (
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <div className={styles.inputGroup}>
-                <label htmlFor="newPassword">Mật khẩu mới</label>
-                <input
-                  type="password"
-                  id="newPassword"
-                  placeholder="Tối thiểu 8 ký tự"
-                  className={`${styles.input} ${errors.newPassword ? styles.inputError : ''}`}
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                />
-                {errors.newPassword && <span className={styles.fieldError}>{errors.newPassword}</span>}
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  placeholder="Nhập lại mật khẩu mới"
-                  className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ''}`}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-                {errors.confirmPassword && <span className={styles.fieldError}>{errors.confirmPassword}</span>}
-              </div>
-
-              <Button
-                variant="primary"
-                size="lg"
-                className={styles.submitBtn}
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? 'Đang xử lý...' : 'Đặt lại mật khẩu →'}
-              </Button>
-            </form>
-          )}
-
-          {/* Back to Login */}
-          <p className={styles.backLink}>
-            <Link href="/login">← Quay lại đăng nhập</Link>
+          <p className={styles.switchText}>
+            <Link href="/login" className={styles.switchLink}>
+              ← Quay lại đăng nhập
+            </Link>
           </p>
         </div>
-      </div>
+      </main>
 
-      {/* Right Side - Image */}
-      <div className={styles.imageSide}>
-        <div className={styles.imageContent}>
-          <div className={styles.assistantBadge}>
-            ThinkAI Assistant
-          </div>
-          <div className={styles.quote}>
-            <div className={styles.quoteLine}></div>
-            <p className={styles.quoteText}>&quot;Kiên trì là chìa<br/>khóa thành công.&quot;</p>
-            <p className={styles.quoteSubtext}>HỌC TẬP KHÔNG GIỚI HẠN</p>
-          </div>
-        </div>
-      </div>
+      {/* 3. Security Metrics Footer */}
+      <footer className={styles.footer}>
+        <span>• 256-BIT ENCRYPTION</span>
+        <span>• ZERO-LATENCY AUTH</span>
+        <span>• MULTI-DEVICE SYNC</span>
+      </footer>
     </div>
   );
 }

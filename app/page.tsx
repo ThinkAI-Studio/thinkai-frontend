@@ -1,150 +1,218 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import Button from '@/components/ui/Button';
+import Image from 'next/image';
 import styles from './page.module.css';
 
-export default function Home() {
+export default function CinematicHeroPage() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Close mobile drawer on Esc or viewport resize
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    const handleResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <>
-      <Navbar />
+    <div className={styles.stage}>
 
-      <main className={styles.main}>
-        <section className={styles.hero}>
-          <div className={styles.container}>
-            <div className={styles.heroGrid}>
-              <div className={styles.heroContent}>
-                <span className={styles.heroLabel}>ThinkAI Learning Workspace</span>
-                <h1 className={styles.heroTitle}>
-                  Học tập sâu, tập trung và có định hướng mỗi ngày
-                </h1>
-                <p className={styles.heroSubtitle}>
-                  ThinkAI gom toàn bộ khóa học, bài thi và BiliBily vào một luồng làm việc duy nhất.
-                  Tối ưu cho học viên lẫn giảng viên với giao diện nhẹ, rõ và ít nhiễu.
-                </p>
+      {/* ════════════════════════════════════════
+          GLASSMORPHIC NAVIGATION BAR
+          ════════════════════════════════════════ */}
+      <header className={styles.header}>
+        <nav className={styles.nav}>
+          {/* Logo with Instrument Serif font */}
+          <Link href="/" className={styles.logo} aria-label="ThinkAI Home">
+            <Image
+              src="/logo.png"
+              alt="ThinkAI Logo"
+              width={32}
+              height={32}
+              className={styles.logoImg}
+              priority
+            />
+            <span className={styles.logoText}>
+              <span>ThinkAI</span>
+              <sup className={styles.logoSup}>®</sup>
+            </span>
+          </Link>
 
-                <div className={styles.heroActions}>
-                  <Link href="/dashboard">
-                    <Button variant="primary" size="lg">Vào dashboard</Button>
-                  </Link>
-                  <Link href="/register">
-                    <Button variant="secondary" size="lg">Tạo tài khoản</Button>
-                  </Link>
-                </div>
+          {/* Desktop Navigation Links */}
+          <div className={styles.navLinks}>
+            <Link href="/" className={`${styles.navLink} ${styles.navLinkActive}`}>
+              Home
+            </Link>
+            <Link href="/courses" className={styles.navLink}>
+              Courses
+            </Link>
+            <Link href="/exams" className={styles.navLink}>
+              Exams
+            </Link>
+            <Link href="/ai-tutor" className={styles.navLink}>
+              AI Tutor
+            </Link>
+            <Link href="/payment" className={styles.navLink}>
+              Pricing
+            </Link>
+          </div>
 
-                <div className={styles.heroMeta}>
-                  <span>Hỗ trợ học 24/7</span>
-                  <span>Luồng học tập liền mạch</span>
-                  <span>Tích hợp BiliBily</span>
-                </div>
-              </div>
+          {/* Actions: Sign In & Begin Journey CTA */}
+          <div className={styles.navActions}>
+            <Link href="/login" className={styles.signInLink}>
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className={`${styles.navCta} ${styles.liquidGlass}`}
+            >
+              Begin Journey
+            </Link>
 
-              <div className={styles.previewPanel}>
-                <div className={styles.panelTop}>
-                  <div className={styles.panelDots}>
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                  <p>thinkai.edu.vn/dashboard</p>
-                </div>
+            {/* Mobile Hamburger Button */}
+            <button
+              type="button"
+              className={`${styles.burgerBtn} ${styles.liquidGlass}`}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+              aria-expanded={mobileOpen}
+            >
+              <svg
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                {mobileOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </nav>
 
-                <div className={styles.panelBody}>
-                  <aside className={styles.panelSidebar}>
-                    <span>Dashboard</span>
-                    <span>Courses</span>
-                    <span>Exams</span>
-                    <span>BiliBily</span>
-                  </aside>
+        {/* Mobile Liquid-Glass Drawer */}
+        {mobileOpen && (
+          <div className={`${styles.mobileSheet} ${styles.liquidGlass}`}>
+            <div className={styles.mobileNavLinks}>
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.mobileLink} ${styles.mobileLinkActive}`}
+              >
+                Home
+              </Link>
+              <Link
+                href="/courses"
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileLink}
+              >
+                Courses
+              </Link>
+              <Link
+                href="/exams"
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileLink}
+              >
+                Exams
+              </Link>
+              <Link
+                href="/ai-tutor"
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileLink}
+              >
+                AI Tutor
+              </Link>
+              <Link
+                href="/payment"
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileLink}
+              >
+                Pricing
+              </Link>
+            </div>
 
-                  <div className={styles.panelMain}>
-                    <h3>Tiếp tục khóa học TOEIC Mastery</h3>
-                    <p>Đã hoàn thành 75% lộ trình • 2 bài thi đang chờ</p>
-
-                    <div className={styles.panelProgress}>
-                      <div className={styles.panelProgressFill} />
-                    </div>
-
-                    <div className={styles.panelStats}>
-                      <article>
-                        <strong>12</strong>
-                        <span>Bài học tuần này</span>
-                      </article>
-                      <article>
-                        <strong>89%</strong>
-                        <span>Độ chính xác luyện tập</span>
-                      </article>
-                    </div>
-
-                    <Link href="/ai-tutor" className={styles.panelAction}>
-                      Mở BiliBily
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            <div className={styles.mobileActions}>
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileSignIn}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.mobileCta} ${styles.liquidGlass}`}
+              >
+                Begin Journey
+              </Link>
             </div>
           </div>
-        </section>
+        )}
+      </header>
 
-        <section className={styles.features}>
-          <div className={styles.container}>
-            <header className={styles.sectionHeader}>
-              <h2>Tập trung vào điều quan trọng nhất: kết quả học tập</h2>
-              <p>
-                Thiết kế giao diện ưu tiên tính rõ ràng, giảm thao tác rườm rà và giúp bạn luôn biết bước tiếp theo.
-              </p>
-            </header>
+      {/* ════════════════════════════════════════
+          HERO SECTION (CINEMATIC TYPOGRAPHY)
+          ════════════════════════════════════════ */}
+      <main className={styles.hero}>
+        {/* Notice Pill for Maintenance */}
+        <div className={styles.announcementWrapper}>
+          <Link href="/maintenance" className={styles.announcementPill}>
+            <span className={styles.announcementDot} />
+            <span className={styles.announcementText}>
+              <strong>Thông báo:</strong> Website đã dừng hoạt động do định hướng sản phẩm không còn phù hợp.
+            </span>
+            <span className={styles.announcementArrow}>Chi tiết &rarr;</span>
+          </Link>
+        </div>
 
-            <div className={styles.featureGrid}>
-              <article className={styles.featureCard}>
-                <h3>Lộ trình cá nhân hóa</h3>
-                <p>Theo dõi tiến độ theo từng khóa, từng bài học, từng kỹ năng.</p>
-              </article>
-              <article className={styles.featureCard}>
-                <h3>Bài thi theo mục tiêu</h3>
-                <p>Tạo đề luyện tập đúng định dạng, có chấm điểm và phân tích kết quả.</p>
-              </article>
-              <article className={styles.featureCard}>
-                <h3>BiliBily theo ngữ cảnh</h3>
-                <p>Hỏi đáp ngay trong luồng học, giữ nguyên ngữ cảnh khóa học hiện tại.</p>
-              </article>
-              <article className={styles.featureCard}>
-                <h3>Teacher workspace riêng</h3>
-                <p>Giảng viên có dashboard, course management và question bank độc lập.</p>
-              </article>
-            </div>
-          </div>
-        </section>
+        {/* H1 Heading with Instrument Serif */}
+        <h1 className={styles.headline}>
+          Where <em className={styles.headlineEm}>dreams</em> rise{' '}
+          <em className={styles.headlineEm}>through the silence.</em>
+        </h1>
 
-        <section className={styles.partners}>
-          <div className={styles.container}>
-            <p className={styles.partnersTitle}>Được tin dùng trong nhiều môi trường đào tạo</p>
-            <div className={styles.partnerList}>
-              <span>University Hub</span>
-              <span>Skill Academy</span>
-              <span>Future Lab</span>
-              <span>EduTech Network</span>
-            </div>
-          </div>
-        </section>
+        {/* Subtext */}
+        <p className={styles.subtext}>
+          We&apos;re designing tools for deep thinkers, bold creators, and quiet
+          rebels. Amid the chaos, we build digital spaces for sharp focus and
+          inspired work.
+        </p>
 
-        <section className={styles.values}>
-          <div className={styles.container}>
-            <h2>Giá trị cốt lõi</h2>
-            <p>
-              Đơn giản trong thao tác, nghiêm túc trong chất lượng và nhất quán trong toàn bộ trải nghiệm.
-            </p>
-            <div className={styles.valueTags}>
-              <span>Rõ ràng</span>
-              <span>Hiệu quả</span>
-              <span>Bền vững</span>
-              <span>Tập trung</span>
-            </div>
-          </div>
-        </section>
+        {/* Hero CTA Button */}
+        <Link
+          href="/register"
+          className={`${styles.heroCta} ${styles.liquidGlass}`}
+        >
+          Begin Journey
+        </Link>
       </main>
 
-      <Footer />
-    </>
+      {/* Footer text */}
+      <footer className={styles.footer}>
+        <span>ThinkAI Architecture · Designed for Inspired Work</span>
+      </footer>
+    </div>
   );
 }

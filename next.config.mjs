@@ -1,19 +1,16 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Specify the path if your app is not deployed at the root of your domain.
-  // basePath: '/',
-
-  // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
-  // trailingSlash: true,
-
-  // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
-  // skipTrailingSlashRedirect: true,
-
-  // Optional: Change the output directory `out` -> `dist`. Remember to update
-  // it in .gitlab-ci.yml as well.
-  // distDir: 'dist',
-
   output: 'standalone',
+  outputFileTracingRoot: __dirname,
+  turbopack: {
+    root: __dirname,
+  },
 };
 
 export default nextConfig;

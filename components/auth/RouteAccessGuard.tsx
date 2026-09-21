@@ -7,6 +7,7 @@ type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT';
 
 const PUBLIC_PATHS = new Set([
   '/',
+  '/maintenance',
   '/login',
   '/register',
   '/forgot-password',
@@ -70,47 +71,17 @@ export default function RouteAccessGuard({ children }: RouteAccessGuardProps) {
   }, [pathname]);
 
   useEffect(() => {
-    // Public pages are always available.
-    if (PUBLIC_PATHS.has(normalizedPath)) {
+    // Chỉ giữ lại trang Home ('/') và trang thông báo ('/maintenance')
+    if (normalizedPath === '/' || normalizedPath === '/maintenance') {
       setAllowed(true);
       setChecked(true);
       return;
     }
 
-    const requiredRole = requiredRoleForPath(normalizedPath);
-    if (!requiredRole) {
-      setAllowed(true);
-      setChecked(true);
-      return;
-    }
-
-    const token = localStorage.getItem('thinkai_access_token') || localStorage.getItem('token');
-    const rawUser = localStorage.getItem('user');
-    let roleFromStorage: UserRole | null = null;
-    if (rawUser) {
-      try {
-        roleFromStorage = normalizeRole(JSON.parse(rawUser)?.role);
-      } catch {
-        roleFromStorage = null;
-      }
-    }
-
-    if (!token) {
-      setAllowed(false);
-      setChecked(true);
-      router.replace('/login');
-      return;
-    }
-
-    if (roleFromStorage === requiredRole) {
-      setAllowed(true);
-      setChecked(true);
-      return;
-    }
-
+    // Tất cả các trang khác đều chuyển hướng về /maintenance
     setAllowed(false);
     setChecked(true);
-    router.replace(defaultPathByRole(roleFromStorage));
+    router.replace('/maintenance');
   }, [normalizedPath, router]);
 
   if (!checked || !allowed) return null;

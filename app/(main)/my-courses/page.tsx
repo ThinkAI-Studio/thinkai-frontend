@@ -7,6 +7,10 @@ import MainSidebar from '../components/MainSidebar';
 import styles from './page.module.css';
 import PageState from '@/components/ui/PageState';
 import { formatVnd } from '@/lib/utils/format';
+import { FadeIn } from '@/components/tai/FadeIn';
+import { NumberFlow } from '@/components/tai/NumberFlow';
+import { StaggerGroup, StaggerItem } from '@/components/tai/StaggerGroup';
+import { SkeletonShimmer } from '@/components/tai/SkeletonShimmer';
 import { getMyCourses, type MyCourseItem } from '@/services/courses';
 
 export default function MyCoursesPage() {
@@ -35,14 +39,31 @@ export default function MyCoursesPage() {
     <div className={dashboardStyles.container}>
       <MainSidebar active="my-courses" />
       <main className={`${dashboardStyles.main} ${styles.main}`}>
-        <section className={styles.hero}>
-          <h1>Khóa học của tôi</h1>
-          <p>Danh sách các khóa học bạn đã đăng ký trên ThinkAI.</p>
-        </section>
+        <FadeIn>
+          <section className={styles.hero}>
+            <h1>Khóa học của tôi</h1>
+            <p>Danh sách các khóa học bạn đã đăng ký trên ThinkAI.</p>
+          </section>
+        </FadeIn>
 
         <section className={styles.content}>
           {loading && (
-            <PageState type="loading" message="Đang tải danh sách khóa học của bạn..." />
+            <div className={styles.courseGrid}>
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className={styles.courseCard}>
+                  <SkeletonShimmer className={styles.courseImage} />
+                  <div className={styles.courseInfo}>
+                    <SkeletonShimmer className="h-5 w-3/4 mb-3" />
+                    <SkeletonShimmer className="h-2 w-full mb-1" />
+                    <SkeletonShimmer className="h-3 w-32 mb-3" />
+                    <div className={styles.courseFooter}>
+                      <SkeletonShimmer className="h-4 w-24" />
+                      <SkeletonShimmer className="h-4 w-32" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
 
           {!loading && error && (
@@ -65,62 +86,66 @@ export default function MyCoursesPage() {
 
           {!loading && !error && courses.length > 0 && (
             <>
-              <div className={styles.statsRow}>
-                <div className={styles.statCard}>
-                  <span className={styles.statNumber}>{courses.length}</span>
-                  <span className={styles.statLabel}>Khóa học đã đăng ký</span>
-                </div>
-                <div className={styles.statCard}>
+              <StaggerGroup className={styles.statsRow}>
+                <StaggerItem className={styles.statCard}>
                   <span className={styles.statNumber}>
-                    {courses.filter((c) => c.progressPercent >= 100).length}
+                    <NumberFlow value={courses.length} />
+                  </span>
+                  <span className={styles.statLabel}>Khóa học đã đăng ký</span>
+                </StaggerItem>
+                <StaggerItem className={styles.statCard}>
+                  <span className={styles.statNumber}>
+                    <NumberFlow value={courses.filter((c) => c.progressPercent >= 100).length} />
                   </span>
                   <span className={styles.statLabel}>Đã hoàn thành</span>
-                </div>
-                <div className={styles.statCard}>
+                </StaggerItem>
+                <StaggerItem className={styles.statCard}>
                   <span className={styles.statNumber}>
-                    {courses.filter((c) => c.progressPercent > 0 && c.progressPercent < 100).length}
+                    <NumberFlow value={courses.filter((c) => c.progressPercent > 0 && c.progressPercent < 100).length} />
                   </span>
                   <span className={styles.statLabel}>Đang học</span>
-                </div>
-              </div>
+                </StaggerItem>
+              </StaggerGroup>
 
-              <div className={styles.courseGrid}>
+              <StaggerGroup className={styles.courseGrid} staggerDelay={0.06}>
                 {courses.map((course) => (
-                  <Link href={`/my-courses/${course.id}`} key={course.id} className={styles.courseCard}>
-                    <div className={styles.courseImage}>
-                      <span className={styles.progressTag}>
-                        {Math.round(course.progressPercent)}%
-                      </span>
-                    </div>
-                    <div className={styles.courseInfo}>
-                      <h3>{course.title}</h3>
-                      <div className={styles.progressBarWrapper}>
-                        <div className={styles.progressBar}>
-                          <div
-                            className={styles.progressFill}
-                            style={{ width: `${Math.min(100, Math.round(course.progressPercent))}%` }}
-                          />
-                        </div>
-                        <span className={styles.progressText}>
-                          {Math.round(course.progressPercent)}% hoàn thành
+                  <StaggerItem key={course.id}>
+                    <Link href={`/my-courses/${course.id}`} className={styles.courseCard}>
+                      <div className={styles.courseImage}>
+                        <span className={styles.progressTag}>
+                          {Math.round(course.progressPercent)}%
                         </span>
                       </div>
-                      <div className={styles.courseFooter}>
-                        <span className={styles.price}>{formatVnd(course.price)}</span>
-                        {course.nextLesson ? (
-                          <span className={styles.nextLesson}>
-                            Tiếp: {course.nextLesson.title}
+                      <div className={styles.courseInfo}>
+                        <h3>{course.title}</h3>
+                        <div className={styles.progressBarWrapper}>
+                          <div className={styles.progressBar}>
+                            <div
+                              className={styles.progressFill}
+                              style={{ width: `${Math.min(100, Math.round(course.progressPercent))}%` }}
+                            />
+                          </div>
+                          <span className={styles.progressText}>
+                            {Math.round(course.progressPercent)}% hoàn thành
                           </span>
-                        ) : (
-                          <span className={styles.nextLesson}>
-                            {course.progressPercent >= 100 ? '✓ Hoàn thành' : 'Bắt đầu học'}
-                          </span>
-                        )}
+                        </div>
+                        <div className={styles.courseFooter}>
+                          <span className={styles.price}>{formatVnd(course.price)}</span>
+                          {course.nextLesson ? (
+                            <span className={styles.nextLesson}>
+                              Tiếp: {course.nextLesson.title}
+                            </span>
+                          ) : (
+                            <span className={styles.nextLesson}>
+                              {course.progressPercent >= 100 ? '✓ Hoàn thành' : 'Bắt đầu học'}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerGroup>
             </>
           )}
         </section>

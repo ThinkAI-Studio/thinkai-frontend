@@ -1,0 +1,159 @@
+.container {
+  border-radius: var(--radius-md);
+  border: var(--line-width) solid var(--line-soft);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.overallBadge {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(var(--success-rgb), 0.1);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  border: var(--line-width) solid rgba(var(--success-rgb), 0.2);
+}
+
+.chartWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.svg {
+  flex-shrink: 0;
+}
+
+.gridPolygon {
+  fill: none;
+  stroke: var(--line-soft);
+  stroke-width: 1;
+}
+
+.gridLine {
+  stroke: var(--line-soft);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+
+.valuePolygon {
+  fill: rgba(var(--accent-rgb), 0.25);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.dotGroup {
+  cursor: pointer;
+}
+
+.vertexDot {
+  fill: var(--bg-surface);
+  stroke: var(--accent);
+  stroke-width: 2;
+  transition: all var(--transition-fast);
+}
+
+.vertexDotActive {
+  fill: var(--accent);
+  stroke: #FFFFFF;
+  stroke-width: 2;
+  r: 6;
+}
+
+.axisLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.axisTag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: var(--line-width) solid var(--line-soft);
+  background: var(--bg-panel);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.axisTag strong {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.axisTag:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-surface);
+}
+
+.axisTagActive {
+  border-color: var(--accent) !important;
+  background: rgba(var(--accent-rgb), 0.08) !important;
+}
+
+.axisTagActive strong {
+  color: var(--accent);
+}
+
+.insightBox {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  border: var(--line-width) solid var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.insightHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.insightScore {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.insightText {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .chartWrapper {
+    flex-direction: column;
+  }
+}

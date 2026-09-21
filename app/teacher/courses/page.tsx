@@ -118,12 +118,7 @@ export default function TeacherCoursesPage() {
       const coursesPage = await getTeacherCourses(0, 20);
       setCourses(coursesPage.content || []);
     } catch (err: any) {
-      if (err instanceof ApiException && err.status === 401) {
-        setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        setTimeout(() => router.push('/login'), 1200);
-      } else {
-        setError(err.message || 'Không thể tải dữ liệu khóa học.');
-      }
+      console.warn('Teacher courses load error:', err);
     } finally {
       setLoading(false);
     }

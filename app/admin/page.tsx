@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import PageState from '@/components/ui/PageState';
 import Button from '@/components/ui/Button';
+import AppHeader from '@/components/layout/AppHeader';
 import { formatVnd } from '@/lib/utils/format';
 import {
   approveAdminUser,
@@ -414,70 +415,54 @@ export default function AdminDashboardPage() {
 
   return (
     <div className={styles.container}>
-      <aside className={styles.sidebar}>
-        <Link href="/" className={styles.logo}>
-          <span className={styles.logoText}>ThinkAI</span>
-        </Link>
-
-        <nav className={styles.nav} role="tablist" aria-label="Bảng điều khiển admin">
-          {sidebarItems.map((item) => (
-            <Button
-              key={item.id}
-              id={`admin-tab-${item.id}`}
-              variant="secondary"
-              size="sm"
-              type="button"
-              role="tab"
-              aria-selected={activeTab === item.id}
-              aria-controls={`admin-panel-${item.id}`}
-              className={`${styles.navItem} ${activeTab === item.id ? styles.active : ''}`}
-              onClick={() => {
-                setActiveTab(item.id);
-                setError('');
-                setNotice('');
-              }}
-            >
-              <span>{item.label}</span>
-            </Button>
-          ))}
-        </nav>
-
-        <div className={styles.sidebarFooter}>
-          <Button
-            variant="secondary"
-            size="sm"
-            type="button"
-            className={styles.themeBtn}
-            onClick={() => fetchTabData(activeTab)}
-          >
-            Làm mới dữ liệu
-          </Button>
-          <div className={styles.adminInfo}>
-            <div className={styles.adminAvatar}>A</div>
-            <div>
-              <span className={styles.adminName}>Quản trị viên</span>
-              <span className={styles.adminEmail}>admin@thinkai.vn</span>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <AppHeader />
 
       <main className={styles.main}>
         <header className={styles.header}>
-          <div>
-            <h1>Bảng điều khiển Admin</h1>
-            <p>Tích hợp API docs: dashboard, users, courses và AI prompts.</p>
+          <div className={styles.headerTop}>
+            <div>
+              <div className={styles.adminBadge}>
+                <span className={styles.pulseDot} />
+                ThinkAI Mission Control
+              </div>
+              <h1>Bảng điều khiển Admin</h1>
+              <p>Tích hợp API docs: dashboard, users, courses và AI prompts.</p>
+            </div>
+            <div className={styles.headerActions}>
+              <Button
+                variant="primary"
+                size="sm"
+                type="button"
+                className={styles.downloadBtn}
+                onClick={() => fetchTabData(activeTab)}
+              >
+                Cập nhật
+              </Button>
+            </div>
           </div>
-          <div className={styles.headerActions}>
-            <Button
-              variant="primary"
-              size="sm"
-              type="button"
-              className={styles.downloadBtn}
-              onClick={() => fetchTabData(activeTab)}
-            >
-              Cập nhật
-            </Button>
+
+          <div className={styles.tabPillBar} role="tablist" aria-label="Bảng điều khiển admin">
+            {sidebarItems.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  id={`admin-tab-${item.id}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`admin-panel-${item.id}`}
+                  className={`${styles.tabPill} ${isActive ? styles.tabPillActive : ''}`}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setError('');
+                    setNotice('');
+                  }}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
         </header>
 

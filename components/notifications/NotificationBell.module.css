@@ -16,9 +16,11 @@
   width: 100%;
   display: block;
   text-align: left;
-  border: 1px solid var(--line-soft);
-  background: var(--bg-surface);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(4, 18, 34, 0.94);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   border-radius: 14px;
   padding: 16px;
   cursor: pointer;
@@ -28,21 +30,21 @@
   display: block;
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .popupMessage {
   display: block;
   margin-top: 6px;
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: #CBD5E1;
 }
 
 .popupHint {
   display: block;
   margin-top: 10px;
   font-size: 0.75rem;
-  color: var(--accent);
+  color: #60a5fa;
 }
 
 .popupClose {
@@ -51,7 +53,7 @@
   right: 10px;
   border: 0;
   background: transparent;
-  color: var(--text-muted);
+  color: #94A3B8;
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
@@ -100,10 +102,12 @@
   width: min(360px, 92vw);
   max-height: 420px;
   overflow: auto;
-  border-radius: 12px;
-  border: var(--line-width) solid var(--line-soft);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-card);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(4, 18, 34, 0.94);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   z-index: 220;
 }
 
@@ -112,18 +116,19 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .title {
   font-size: 0.82rem;
   font-weight: 700;
+  color: #ffffff;
 }
 
 .markAllBtn {
   border: 0;
   background: transparent;
-  color: var(--accent);
+  color: #60a5fa;
   font-size: 0.74rem;
   cursor: pointer;
 }
@@ -131,7 +136,7 @@
 .empty {
   padding: 14px 12px;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #94A3B8;
 }
 
 .list {
@@ -141,7 +146,7 @@
 }
 
 .item {
-  border-bottom: 1px solid var(--line-soft);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .item:last-child {
@@ -159,26 +164,26 @@
 }
 
 .itemUnread .itemBtn {
-  background: rgba(var(--accent-soft-rgb), 0.45);
+  background: rgba(30, 64, 175, 0.25);
 }
 
 .itemTitle {
   display: block;
   font-size: 0.79rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .itemMessage {
   display: block;
   margin-top: 2px;
   font-size: 0.77rem;
-  color: var(--text-secondary);
+  color: #CBD5E1;
 }
 
 .itemTime {
   display: block;
   margin-top: 5px;
   font-size: 0.7rem;
-  color: var(--text-muted);
+  color: #94A3B8;
 }

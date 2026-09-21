@@ -60,12 +60,7 @@ export default function TeacherOverviewPage() {
       setCourses(coursePage.content || []);
       setExams(examPage.content || []);
     } catch (err: any) {
-      if (err instanceof ApiException && err.status === 401) {
-        setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        setTimeout(() => router.push('/login'), 1200);
-      } else {
-        setError(err.message || 'Không thể tải dữ liệu giảng viên.');
-      }
+      console.warn('Teacher load data error:', err);
     } finally {
       setLoading(false);
     }

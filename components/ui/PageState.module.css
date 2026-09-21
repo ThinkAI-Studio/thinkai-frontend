@@ -1,37 +1,58 @@
 .state {
-  border: var(--line-width) solid var(--line-soft);
-  border-radius: 16px;
-  background: rgba(var(--surface-rgb), 0.86);
-  box-shadow: var(--shadow-subtle);
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(4, 18, 34, 0.78);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  margin: 24px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.state::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), transparent);
+  pointer-events: none;
 }
 
 .title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin-bottom: 8px;
 }
 
 .message {
-  margin: 0;
-  font-size: 0.86rem;
-  line-height: 1.55;
-  color: var(--text-secondary);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 14px;
+  color: #CBD5E1;
+  max-width: 440px;
+  margin-bottom: 20px;
+  line-height: 1.5;
 }
 
 .loading .title {
-  color: var(--text-primary);
+  color: #CBD5E1;
 }
 
 .error .title {
-  color: var(--error);
+  color: #ef4444;
 }
 
 .empty .title {
-  color: var(--text-primary);
+  color: #CBD5E1;
 }

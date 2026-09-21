@@ -609,7 +609,10 @@ export default function LearningRoomPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoText}>ThinkAI</span>
+          <img src="/logo.png" alt="ThinkAI Logo" className={styles.brandLogo} />
+          <span className={styles.logoText}>
+            ThinkAI<span className={styles.brandSup}>®</span>
+          </span>
         </Link>
 
         <nav className={styles.nav}>

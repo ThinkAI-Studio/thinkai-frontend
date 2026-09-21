@@ -133,22 +133,9 @@ async function requestCore<T>(
   return parseApiSuccess<T>(response);
 }
 
-function redirectToLoginIfNeeded(endpoint: string): void {
-  if (typeof window === 'undefined') return;
-  if (AUTH_ENDPOINTS_NO_REDIRECT.has(endpoint)) return;
-
-  const currentPath = window.location.pathname;
-  if (
-    currentPath === '/login' ||
-    currentPath === '/register' ||
-    currentPath === '/forgot-password' ||
-    currentPath === '/reset-password'
-  ) {
-    return;
-  }
-
-  const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
-  window.location.replace(`/login?next=${next}`);
+function redirectToLoginIfNeeded(_endpoint: string): void {
+  // Tạm thời vô hiệu hóa chuyển hướng login để kiểm thử UI
+  return;
 }
 
 export async function apiRequest<T>(

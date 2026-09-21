@@ -427,10 +427,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const page = STATIC_PAGES[slug];
   if (!page) {
-    return { title: 'ThinkAI' };
+    return { title: 'Trang thông tin' };
   }
   return {
-    title: `${page.title} | ThinkAI`,
+    title: page.title,
     description: page.summary,
   };
 }

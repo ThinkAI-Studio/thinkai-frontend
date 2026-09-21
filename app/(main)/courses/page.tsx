@@ -8,6 +8,9 @@ import styles from './page.module.css';
 import PageState from '@/components/ui/PageState';
 import Button from '@/components/ui/Button';
 import { formatVnd } from '@/lib/utils/format';
+import { FadeIn } from '@/components/tai/FadeIn';
+import { StaggerGroup, StaggerItem } from '@/components/tai/StaggerGroup';
+import { SkeletonShimmer } from '@/components/tai/SkeletonShimmer';
 import {
   getCourses,
   type CourseListItem,
@@ -18,6 +21,15 @@ const sortOptions = [
   { label: 'Mới nhất', sortBy: 'createdAt', sortDir: 'desc' as const },
   { label: 'Giá thấp nhất', sortBy: 'price', sortDir: 'asc' as const },
   { label: 'Giá cao nhất', sortBy: 'price', sortDir: 'desc' as const },
+];
+
+const courseCategories = [
+  { id: '', label: 'Tất cả' },
+  { id: 'TOEIC', label: 'Luyện thi TOEIC' },
+  { id: 'IELTS', label: 'Luyện thi IELTS' },
+  { id: 'Giao tiếp', label: 'Giao tiếp thực chiến' },
+  { id: 'THPT', label: 'Tiếng Anh THPT' },
+  { id: 'AI', label: 'AI & Công nghệ' },
 ];
 
 export default function CoursesPage() {
@@ -78,64 +90,52 @@ export default function CoursesPage() {
     <div className={dashboardStyles.container}>
       <MainSidebar active="courses" />
       <main className={`${dashboardStyles.main} ${styles.main}`}>
-        <section className={styles.hero}>
-          <h1>
-            Khám phá tri thức
-            <br />
-            <em>vượt giới hạn</em>
-          </h1>
-          <p>Danh sách khóa học được đồng bộ trực tiếp từ hệ thống ThinkAI.</p>
+        <FadeIn>
+          <section className={styles.hero}>
+            <h1>
+              Khóa học trực tuyến
+              <br />
+              <em>cùng gia sư AI cá nhân hóa</em>
+            </h1>
+            <p>Lộ trình đào tạo TOEIC, IELTS và kỹ năng chuyên sâu được thiết kế tối ưu theo năng lực của bạn.</p>
 
-          <div className={styles.searchBox}>
-            <input
-              type="text"
-              placeholder="Tìm kiếm khóa học..."
-              className={styles.searchInput}
-              value={keywordInput}
-              onChange={(e) => setKeywordInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            />
-            <Button variant="secondary" size="sm" type="button" className={styles.clearBtn} onClick={handleSearch}>
-              Tìm
-            </Button>
-          </div>
-        </section>
-
-        <section className={styles.content}>
-          <aside className={styles.sidebar}>
-            <div className={styles.filterHeader}>
-              <h3>Trạng thái</h3>
-              <Button
-                variant="secondary"
-                size="sm"
-                type="button"
-                className={styles.clearBtn}
-                onClick={() => {
-                  setKeywordInput('');
-                  setQuery({
-                    page: 0,
-                    size: 9,
-                    keyword: '',
-                    sortBy: 'createdAt',
-                    sortDir: 'desc',
-                  });
-                }}
-              >
-                Đặt lại
+            <div className={styles.searchBox}>
+              <input
+                type="text"
+                placeholder="Tìm kiếm khóa học..."
+                className={styles.searchInput}
+                value={keywordInput}
+                onChange={(e) => setKeywordInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              />
+              <Button variant="secondary" size="sm" type="button" className={styles.clearBtn} onClick={handleSearch}>
+                Tìm
               </Button>
             </div>
-            <div className={styles.filterGroup}>
-              <h4>THÔNG TIN</h4>
-              <label className={styles.checkbox}>
-                <input type="checkbox" checked readOnly />
-                <span>Đang hiển thị API thật</span>
-              </label>
-              <label className={styles.checkbox}>
-                <input type="checkbox" checked={loading} readOnly />
-                <span>{loading ? 'Đang tải dữ liệu' : 'Tải dữ liệu thành công'}</span>
-              </label>
-            </div>
-          </aside>
+          </section>
+        </FadeIn>
+
+        <section className={styles.content}>
+          <div className={styles.filterPillBar} role="tablist" aria-label="Bộ lọc danh mục">
+            {courseCategories.map((cat) => {
+              const isSelected = (!query.keyword && cat.id === '') || query.keyword === cat.id;
+              return (
+                <button
+                  key={cat.id || 'all'}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  className={`${styles.filterPill} ${isSelected ? styles.filterPillActive : ''}`}
+                  onClick={() => {
+                    setKeywordInput(cat.id);
+                    setQuery((prev) => ({ ...prev, page: 0, keyword: cat.id }));
+                  }}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
+          </div>
 
           <div className={styles.courseSection}>
             <div className={styles.courseHeader}>
@@ -156,7 +156,22 @@ export default function CoursesPage() {
             </div>
 
             {loading && (
-              <PageState type="loading" message="Đang tải danh sách khóa học từ hệ thống." />
+              <div className={styles.courseGrid}>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className={styles.courseCard}>
+                    <SkeletonShimmer className={styles.courseImage} />
+                    <div className={styles.courseInfo}>
+                      <SkeletonShimmer className="h-4 w-20 mb-2" />
+                      <SkeletonShimmer className="h-5 w-full mb-2" />
+                      <SkeletonShimmer className="h-4 w-24 mb-3" />
+                      <div className={styles.courseFooter}>
+                        <SkeletonShimmer className="h-4 w-32" />
+                        <SkeletonShimmer className="h-5 w-20" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
             {!loading && error && (
               <PageState
@@ -168,36 +183,38 @@ export default function CoursesPage() {
             )}
 
             {!loading && !error && courses.length > 0 && (
-              <div className={styles.courseGrid}>
+              <StaggerGroup className={styles.courseGrid} staggerDelay={0.06}>
                 {courses.map((course) => (
-                  <Link href={`/courses/${course.id}`} key={course.id} className={styles.courseCard}>
-                    <div 
-                      className={styles.courseImage} 
-                      style={course.thumbnail ? { 
-                        backgroundImage: `url(${course.thumbnail})`, 
-                        backgroundSize: 'cover', 
-                        backgroundPosition: 'center' 
-                      } : {}}
-                    >
-                      <span className={styles.categoryTag}>KHÓA HỌC</span>
-                    </div>
-                    <div className={styles.courseInfo}>
-                      <div className={styles.ratingRow}>
-                        <span className={styles.reviews}>Học viên:</span>
-                        <span className={styles.rating}>{course.enrolledCount}</span>
+                  <StaggerItem key={course.id}>
+                    <Link href={`/courses/${course.id}`} className={styles.courseCard}>
+                      <div 
+                        className={styles.courseImage} 
+                        style={course.thumbnail ? { 
+                          backgroundImage: `url(${course.thumbnail})`, 
+                          backgroundSize: 'cover', 
+                          backgroundPosition: 'center' 
+                        } : {}}
+                      >
+                        <span className={styles.categoryTag}>KHÓA HỌC</span>
                       </div>
-                      <h3>{course.title}</h3>
-                      <p>{course.lessonsCount} bài học</p>
-                      <div className={styles.courseFooter}>
-                        <div className={styles.instructor}>
-                          <span>{course.instructor?.fullName || 'Đang cập nhật'}</span>
+                      <div className={styles.courseInfo}>
+                        <div className={styles.ratingRow}>
+                          <span className={styles.reviews}>Học viên:</span>
+                          <span className={styles.rating}>{course.enrolledCount}</span>
                         </div>
-                        <span className={styles.price}>{formatVnd(course.price)}</span>
+                        <h3>{course.title}</h3>
+                        <p>{course.lessonsCount} bài học</p>
+                        <div className={styles.courseFooter}>
+                          <div className={styles.instructor}>
+                            <span>{course.instructor?.fullName || 'Đang cập nhật'}</span>
+                          </div>
+                          <span className={styles.price}>{formatVnd(course.price)}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </StaggerItem>
                 ))}
-              </div>
+              </StaggerGroup>
             )}
 
             {!loading && !error && courses.length === 0 && (

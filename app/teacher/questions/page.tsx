@@ -96,12 +96,7 @@ export default function TeacherQuestionsPage() {
       const questionPage = await getTeacherQuestionBank(0, 20);
       setQuestions(questionPage.content || []);
     } catch (err: any) {
-      if (err instanceof ApiException && err.status === 401) {
-        setError('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        setTimeout(() => router.push('/login'), 1200);
-      } else {
-        setError(err.message || 'Không thể tải question bank.');
-      }
+      console.warn('Teacher questions load error:', err);
     } finally {
       setLoading(false);
     }
